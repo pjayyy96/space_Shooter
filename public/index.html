@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Space Shooter</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #02040c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    canvas {
+      /* Keep the 480x720 (2:3) ratio and fit the window */
+      width: min(95vw, calc(95vh * 2 / 3));
+      height: auto;
+      background: #070b1a;
+      border: 1px solid #1d2a4d;
+      box-shadow: 0 0 30px #1d3a7a55;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game" width="480" height="720"></canvas>
+  <script src="game.js"></script>
+</body>
+</html>
