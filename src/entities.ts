@@ -189,9 +189,9 @@ export class Enemy implements Entity {
     this.points = s.points;
     this.color = s.color;
     // Later stages make enemies tougher and a bit faster
-    this.hp = s.hp + Math.floor((stage - 1) / 3);
+    this.hp = s.hp + Math.floor((stage - 1) / 2);
     this.maxHp = this.hp;
-    this.speed = s.speed * (1 + 0.04 * (stage - 1));
+    this.speed = s.speed * (1 + 0.07 * (stage - 1));
     this.baseX = x;
   }
 
@@ -209,7 +209,7 @@ export class Enemy implements Entity {
   /** Only tanks shoot. Returns an aimed bullet, or null if not ready. */
   tryFire(targetX: number, targetY: number): Bullet | null {
     if (this.kind !== "tank" || this.fireCooldown > 0 || this.y < 0) return null;
-    this.fireCooldown = 1.8;
+    this.fireCooldown = 1.3;
     const dx = targetX - this.x;
     const dy = targetY - this.y;
     const len = Math.hypot(dx, dy) || 1;
@@ -286,7 +286,7 @@ export class Boss implements Entity {
   private volley = 0;
 
   constructor(private readonly stage: number) {
-    this.maxHp = 30 + 18 * stage;
+    this.maxHp = 45 + 25 * stage;
     this.hp = this.maxHp;
   }
 
@@ -299,10 +299,10 @@ export class Boss implements Entity {
   /** Returns the volley to fire this frame, or nothing if it is not ready. */
   tryFire(targetX: number, targetY: number): Bullet[] {
     if (this.fireTimer > 0) return [];
-    this.fireTimer = Math.max(0.7, 1.6 - 0.1 * this.stage);
-    const speed = 200 + 10 * this.stage;
+    this.fireTimer = Math.max(0.45, 1.3 - 0.12 * this.stage);
+    const speed = 220 + 15 * this.stage;
     const startY = this.y + this.radius;
-    const ring = this.stage >= 3 && this.volley % 2 === 1;
+    const ring = this.stage >= 2 && this.volley % 2 === 1;
     this.volley++;
     const out: Bullet[] = [];
     if (ring) {

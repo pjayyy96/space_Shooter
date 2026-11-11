@@ -35,7 +35,7 @@ function xpToNext(level: number): number {
 
 /** Regular enemies to face in a stage before its boss appears. */
 function stageGoal(stage: number): number {
-  return 10 + 4 * stage;
+  return 12 + 5 * stage;
 }
 
 /** Picks up to three skills the player can still take, in random order. */
@@ -277,7 +277,7 @@ export class Game {
     if (this.spawnTimer > 0) return;
 
     // Spawn faster in later stages, with some randomness
-    const interval = Math.max(0.35, 1.2 - this.stage * 0.08);
+    const interval = Math.max(0.25, 1.1 - this.stage * 0.1);
     this.spawnTimer = interval * (0.7 + Math.random() * 0.6);
     this.stageSpawned++;
 
@@ -287,8 +287,8 @@ export class Game {
 
   private pickKind(): EnemyKind {
     const r = Math.random();
-    if (this.stage >= 3 && r < 0.15) return "tank";
-    if (this.stage >= 2 && r < 0.4) return "weaver";
+    if (this.stage >= 2 && r < 0.2) return "tank";
+    if (this.stage >= 1 && r < 0.5) return "weaver";
     return "grunt";
   }
 
@@ -570,8 +570,8 @@ export class Game {
   }
 
   private drawMenu(ctx: CanvasRenderingContext2D): void {
+    this.drawLogo(ctx);
     this.drawOverlay(ctx, [
-      ["SPACE SHOOTER", 40, "#4cc9f0"],
       ["Arrows / WASD : move", 16, NEON_TEXT],
       ["Space         : shoot", 16, NEON_TEXT],
       ["P             : pause", 16, NEON_TEXT],
@@ -580,6 +580,40 @@ export class Game {
       ["Beat each stage's boss to advance", 16, "#ffd166"],
       ["Press Enter or Space to start", 18, "#ffd166"],
     ]);
+  }
+
+  /** Neon "SPACE SHOOTER" title logo for the start screen. */
+  private drawLogo(ctx: CanvasRenderingContext2D): void {
+    const cx = WIDTH / 2;
+    const gradient = ctx.createLinearGradient(0, 70, 0, 190);
+    gradient.addColorStop(0, "#9ffcff");
+    gradient.addColorStop(0.5, NEON_TEXT);
+    gradient.addColorStop(1, "#9d4edd");
+
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.lineJoin = "round";
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = "#0b1d3a";
+    ctx.shadowColor = NEON_TEXT;
+    ctx.shadowBlur = 24;
+    ctx.fillStyle = gradient;
+    for (const [word, y, size] of [
+      ["NEON", 105, 52],
+      ["SPACE SHOOTER", 165, 40],
+    ] as const) {
+      ctx.font = `bold ${size}px monospace`;
+      ctx.strokeText(word, cx, y);
+      ctx.fillText(word, cx, y);
+    }
+
+    // Accent bar under the title
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = GOLD;
+    ctx.fillStyle = GOLD;
+    ctx.fillRect(cx - 120, 196, 240, 3);
+    ctx.restore();
   }
 
   private drawOverlay(
